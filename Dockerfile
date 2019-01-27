@@ -1,19 +1,37 @@
-FROM ubuntu:trusty
-MAINTAINER Sean Payne <seantpayne+docker@gmail.com>
+FROM ubuntu:bionic
 
 ENV DEBIAN_FRONTEND noninteractive
 
-ADD startup.sh /startup.sh
-
 RUN apt-get update -y && \
-    apt-get install -y git x11vnc wget python python-numpy unzip Xvfb firefox openbox geany menu && \
-    cd /root && git clone https://github.com/kanaka/noVNC.git && \
-    cd noVNC/utils && git clone https://github.com/kanaka/websockify websockify && \
-    cd /root && \
-    chmod 0755 /startup.sh && \
+    apt-get install -y --no-install-recommends \
+    git \
+    ca-certificates \
+    tigervnc-standalone-server \
+    tigervnc-common \
+    wget \
+    python \
+    python-numpy \
+    unzip \
+    firefox \
+    openbox \
+    menu \
+    supervisor && \
     apt-get autoclean && \
     apt-get autoremove && \
     rm -rf /var/lib/apt/lists/*
 
-CMD /startup.sh
+RUN git clone https://github.com/novnc/noVNC /root/noVNC && \
+    ln -s /root/noVNC/vnc.html /root/noVNC/index.html && \
+    git clone https://github.com/novnc/websockify /root/noVNC/utils/websockify && \
+    rm -rf /root/noVNC/.git /root/noVNC/utils/websockify/.git
+
+COPY supervisor.conf /etc/supervisor/conf.d/supervisor.conf
+ENV USER root
+
 EXPOSE 6080
+
+RUN mkdir /root/.vnc && \
+    echo password | vncpasswd -f > /root/.vnc/passwd && \
+    chmod 600 /root/.vnc/passwd
+
+CMD ["/usr/bin/supervisord","-n"]
