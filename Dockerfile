@@ -8,13 +8,9 @@ RUN apt-get update -y && \
     ca-certificates \
     tigervnc-standalone-server \
     tigervnc-common \
-    wget \
-    python \
     python-numpy \
-    unzip \
     firefox \
-    openbox \
-    menu \
+    lxde \
     supervisor && \
     apt-get autoclean && \
     apt-get autoremove && \
@@ -34,6 +30,8 @@ EXPOSE 6080
 
 RUN mkdir /root/.vnc && \
     echo password | vncpasswd -f > /root/.vnc/passwd && \
-    chmod 600 /root/.vnc/passwd
+    chmod 600 /root/.vnc/passwd && \
+    touch /root/.Xauthority && \
+    update-alternatives --remove-all vncconfig
 
 CMD ["/usr/bin/supervisord","-n"]
