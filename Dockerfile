@@ -22,7 +22,7 @@ RUN apt-get update -y && \
 
 RUN git clone https://github.com/novnc/noVNC /noVNC && \
     git -C /noVNC checkout -b local 36bfcb0 && \
-    ln -s /noVNC/vnc.html /noVNC/index.html && \
+    echo "<meta http-equiv='refresh' content='0; url=vnc.html?password=password&resize=remote&autoconnect=1'>" > /noVNC/index.html && \
     git clone https://github.com/novnc/websockify /noVNC/utils/websockify && \
     git -C /noVNC/utils/websockify checkout -b local f0bdb0a && \
     rm -rf /noVNC/.git /noVNC/utils/websockify/.git
