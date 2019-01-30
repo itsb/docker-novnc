@@ -20,12 +20,12 @@ RUN apt-get update -y && \
     apt-get autoremove && \
     rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/novnc/noVNC /root/noVNC && \
-    git -C /root/noVNC checkout -b local 36bfcb0 && \
-    ln -s /root/noVNC/vnc.html /root/noVNC/index.html && \
-    git clone https://github.com/novnc/websockify /root/noVNC/utils/websockify && \
-    git -C /root/noVNC/utils/websockify checkout -b local f0bdb0a && \
-    rm -rf /root/noVNC/.git /root/noVNC/utils/websockify/.git
+RUN git clone https://github.com/novnc/noVNC /noVNC && \
+    git -C /noVNC checkout -b local 36bfcb0 && \
+    ln -s /noVNC/vnc.html /noVNC/index.html && \
+    git clone https://github.com/novnc/websockify /noVNC/utils/websockify && \
+    git -C /noVNC/utils/websockify checkout -b local f0bdb0a && \
+    rm -rf /noVNC/.git /noVNC/utils/websockify/.git
 
 COPY supervisor.conf /etc/supervisor/conf.d/supervisor.conf
 ENV USER root
