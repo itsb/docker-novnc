@@ -21,8 +21,10 @@ RUN apt-get update -y && \
     rm -rf /var/lib/apt/lists/*
 
 RUN git clone https://github.com/novnc/noVNC /root/noVNC && \
+    git -C /root/noVNC checkout -b local 36bfcb0 && \
     ln -s /root/noVNC/vnc.html /root/noVNC/index.html && \
     git clone https://github.com/novnc/websockify /root/noVNC/utils/websockify && \
+    git -C /root/noVNC/utils/websockify checkout -b local f0bdb0a && \
     rm -rf /root/noVNC/.git /root/noVNC/utils/websockify/.git
 
 COPY supervisor.conf /etc/supervisor/conf.d/supervisor.conf
