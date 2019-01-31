@@ -9,7 +9,6 @@ RUN apt-get update -y && \
     tigervnc-standalone-server \
     tigervnc-common \
     python-numpy \
-    firefox \
     lxde \
     supervisor && \
     apt-get autoclean && \
