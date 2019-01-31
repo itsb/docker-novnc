@@ -13,7 +13,7 @@ Especially useful if you have to give access to your friends who come over for f
 
 ## How to use
 ```
-docker run -td -p 6080:6080 itsb/docker-novnc
+docker run --rm -d -p 80:6080 itsb/docker-novnc
 
 # Or if you want to build it yourself
 git clone https://github.com/itsb/docker-novnc.git
