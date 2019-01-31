@@ -32,3 +32,14 @@ RUN mkdir /root/.vnc && \
     update-alternatives --remove-all vncconfig
 
 CMD ["/usr/bin/supervisord","-n"]
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    firefox \
+    gnupg && \
+    echo "deb http://ppa.launchpad.net/mozillateam/xul-ext/ubuntu bionic main" > /etc/apt/sources.list.d/xul-ext.list && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CE49EC21 && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends webext-ublock-origin && \
+    rm /etc/apt/sources.list.d/xul-ext.list && \
+    rm -rf /var/lib/apt/lists/*
