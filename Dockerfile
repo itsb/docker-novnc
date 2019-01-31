@@ -11,8 +11,6 @@ RUN apt-get update -y && \
     python-numpy \
     lxde \
     supervisor && \
-    apt-get autoclean && \
-    apt-get autoremove && \
     rm -rf /var/lib/apt/lists/*
 
 RUN git clone https://github.com/novnc/noVNC /noVNC && \
