@@ -6,12 +6,19 @@ RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
     git \
     ca-certificates \
-    tigervnc-standalone-server \
-    tigervnc-common \
+    xauth \
+    xfonts-base \
+    x11-xkb-utils \
+    wget \
     python-numpy \
     lxde \
     supervisor && \
     rm -rf /var/lib/apt/lists/*
+
+ENV TIGERVNCVER=1.9.0
+RUN wget -O /tmp/tigervnc.tgz https://bintray.com/tigervnc/stable/download_file?file_path=tigervnc-${TIGERVNCVER}.x86_64.tar.gz && \
+    tar xf /tmp/tigervnc.tgz --strip 1 -C / && \
+    rm -rf /tmp/tigervnc.tgz
 
 RUN git clone https://github.com/novnc/noVNC /noVNC && \
     git -C /noVNC checkout -b local 36bfcb0 && \
@@ -28,8 +35,9 @@ EXPOSE 6080
 RUN mkdir /root/.vnc && \
     echo password | vncpasswd -f > /root/.vnc/passwd && \
     chmod 600 /root/.vnc/passwd && \
-    touch /root/.Xauthority && \
-    update-alternatives --remove-all vncconfig
+    echo startlxde > /root/.vnc/xstartup && \
+    chmod 700 /root/.vnc/xstartup && \
+    touch /root/.Xauthority
 
 CMD ["/usr/bin/supervisord","-n"]
 
