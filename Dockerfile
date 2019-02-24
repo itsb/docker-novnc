@@ -2,13 +2,15 @@ FROM ubuntu:bionic
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update -y && \
+RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     novnc \
     net-tools \
     ca-certificates \
-    tigervnc-standalone-server \
-    tigervnc-common \
+    tightvncserver \
+    xvfb \
+    x11vnc \
+    xfonts-base \
     lxde \
     supervisor && \
     rm -rf /var/lib/apt/lists/*
@@ -17,8 +19,9 @@ RUN apt-get update -y && \
 RUN mkdir /root/.vnc && \
     echo password | vncpasswd -f > /root/.vnc/passwd && \
     chmod 600 /root/.vnc/passwd && \
+    echo startlxde > /root/.vnc/xstartup && \
+    chmod 700 /root/.vnc/xstartup && \
     touch /root/.Xauthority && \
-    update-alternatives --remove-all vncconfig && \
     echo "<meta http-equiv='refresh' content='0; url=vnc.html?password=password&resize=remote&autoconnect=1'>" > /usr/share/novnc/index.html
 
 # firefox with  ad blocker
