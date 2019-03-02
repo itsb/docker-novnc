@@ -4,8 +4,9 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    novnc \
+    git \
     net-tools \
+    python-numpy \
     ca-certificates \
     tightvncserver \
     xvfb \
@@ -21,8 +22,14 @@ RUN mkdir /root/.vnc && \
     chmod 600 /root/.vnc/passwd && \
     echo startlxde > /root/.vnc/xstartup && \
     chmod 700 /root/.vnc/xstartup && \
-    touch /root/.Xauthority && \
-    echo "<meta http-equiv='refresh' content='0; url=vnc.html?password=password&resize=remote&autoconnect=1'>" > /usr/share/novnc/index.html
+    touch /root/.Xauthority
+
+RUN git clone https://github.com/novnc/noVNC /noVNC && \
+    git -C /noVNC checkout -b local 36bfcb0 && \
+    echo "<meta http-equiv='refresh' content='0; url=vnc.html?password=password&resize=remote&autoconnect=1'>" > /noVNC/index.html && \
+    git clone https://github.com/novnc/websockify /noVNC/utils/websockify && \
+    git -C /noVNC/utils/websockify checkout -b local f0bdb0a && \
+    rm -rf /noVNC/.git /noVNC/utils/websockify/.git
 
 # firefox with  ad blocker
 RUN apt-get update && \
@@ -36,7 +43,6 @@ RUN apt-get update && \
     rm /etc/apt/sources.list.d/xul-ext.list && \
     rm -rf /var/lib/apt/lists/*
 
-ENV USER root
 COPY supervisor.conf /etc/supervisor/conf.d/supervisor.conf
 CMD ["/usr/bin/supervisord","-n"]
 
