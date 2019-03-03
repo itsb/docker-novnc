@@ -46,4 +46,9 @@ RUN apt-get update && \
 COPY supervisor.conf /etc/supervisor/conf.d/supervisor.conf
 CMD ["/usr/bin/supervisord","-n"]
 
+# direct vnc port
+EXPOSE 5901
+# novnc listening port
 EXPOSE 6080
+# supervisord web frontend
+EXPOSE 9001
